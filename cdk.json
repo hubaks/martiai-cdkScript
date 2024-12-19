@@ -1,0 +1,272 @@
+{
+  "app": "python app.py",
+  "watch": {
+    "include": [
+      "**"
+    ],
+    "exclude": [
+      "README.md",
+      "cdk*.json",
+      "requirements*.txt",
+      "source.bat",
+      "**/__init__.py",
+      "**/__pycache__",
+      "tests"
+    ]
+  },
+  "context": {
+    "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
+    "@aws-cdk/core:checkSecretUsage": true,
+    "@aws-cdk/core:target-partitions": [
+      "aws",
+      "aws-cn"
+    ],
+    "@aws-cdk-containers/ecs-service-extensions:enableDefaultLogDriver": true,
+    "@aws-cdk/aws-ec2:uniqueImdsv2TemplateName": true,
+    "@aws-cdk/aws-ecs:arnFormatIncludesClusterName": true,
+    "@aws-cdk/aws-iam:minimizePolicies": true,
+    "@aws-cdk/core:validateSnapshotRemovalPolicy": true,
+    "@aws-cdk/aws-codepipeline:crossAccountKeyAliasStackSafeResourceName": true,
+    "@aws-cdk/aws-s3:createDefaultLoggingPolicy": true,
+    "@aws-cdk/aws-sns-subscriptions:restrictSqsDescryption": true,
+    "@aws-cdk/aws-apigateway:disableCloudWatchRole": true,
+    "@aws-cdk/core:enablePartitionLiterals": true,
+    "@aws-cdk/aws-events:eventsTargetQueueSameAccount": true,
+    "@aws-cdk/aws-ecs:disableExplicitDeploymentControllerForCircuitBreaker": true,
+    "@aws-cdk/aws-iam:importedRoleStackSafeDefaultPolicyName": true,
+    "@aws-cdk/aws-s3:serverAccessLogsUseBucketPolicy": true,
+    "@aws-cdk/aws-route53-patters:useCertificate": true,
+    "@aws-cdk/customresources:installLatestAwsSdkDefault": false,
+    "@aws-cdk/aws-rds:databaseProxyUniqueResourceName": true,
+    "@aws-cdk/aws-codedeploy:removeAlarmsFromDeploymentGroup": true,
+    "@aws-cdk/aws-apigateway:authorizerChangeDeploymentLogicalId": true,
+    "@aws-cdk/aws-ec2:launchTemplateDefaultUserData": true,
+    "@aws-cdk/aws-secretsmanager:useAttachedSecretResourcePolicyForSecretTargetAttachments": true,
+    "@aws-cdk/aws-redshift:columnId": true,
+    "@aws-cdk/aws-stepfunctions-tasks:enableEmrServicePolicyV2": true,
+    "@aws-cdk/aws-ec2:restrictDefaultSecurityGroup": true,
+    "@aws-cdk/aws-apigateway:requestValidatorUniqueId": true,
+    "@aws-cdk/aws-kms:aliasNameRef": true,
+    "@aws-cdk/aws-autoscaling:generateLaunchTemplateInsteadOfLaunchConfig": true,
+    "@aws-cdk/core:includePrefixInUniqueNameGeneration": true,
+    "@aws-cdk/aws-efs:denyAnonymousAccess": true,
+    "@aws-cdk/aws-opensearchservice:enableOpensearchMultiAzWithStandby": true,
+    "@aws-cdk/aws-lambda-nodejs:useLatestRuntimeVersion": true,
+    "@aws-cdk/aws-efs:mountTargetOrderInsensitiveLogicalId": true,
+    "@aws-cdk/aws-rds:auroraClusterChangeScopeOfInstanceParameterGroupWithEachParameters": true,
+    "@aws-cdk/aws-appsync:useArnForSourceApiAssociationIdentifier": true,
+    "@aws-cdk/aws-rds:preventRenderingDeprecatedCredentials": true,
+    "@aws-cdk/aws-codepipeline-actions:useNewDefaultBranchForCodeCommitSource": true,
+    "@aws-cdk/aws-cloudwatch-actions:changeLambdaPermissionLogicalIdForLambdaAction": true,
+    "@aws-cdk/aws-codepipeline:crossAccountKeysDefaultValueToFalse": true,
+    "@aws-cdk/aws-codepipeline:defaultPipelineTypeToV2": true,
+    "@aws-cdk/aws-kms:reduceCrossAccountRegionPolicyScope": true,
+    "@aws-cdk/aws-eks:nodegroupNameAttribute": true,
+    "@aws-cdk/aws-ec2:ebsDefaultGp3Volume": true,
+    "@aws-cdk/aws-ecs:removeDefaultDeploymentAlarm": true,
+    "@aws-cdk/custom-resources:logApiResponseDataPropertyTrueDefault": false,
+    "@aws-cdk/aws-s3:keepNotificationInImportedBucket": false,
+    "@aws-cdk/aws-ecs:reduceEc2FargateCloudWatchPermissions": true,
+    "@aws-cdk/aws-dynamodb:resourcePolicyPerReplica": true,
+    "@aws-cdk/aws-ec2:ec2SumTImeoutEnabled": true,
+    "@aws-cdk/aws-appsync:appSyncGraphQLAPIScopeLambdaPermission": true,
+    "@aws-cdk/aws-rds:setCorrectValueForDatabaseInstanceReadReplicaInstanceResourceId": true,
+    "@aws-cdk/core:cfnIncludeRejectComplexResourceUpdateCreatePolicyIntrinsics": true,
+    "@aws-cdk/aws-lambda-nodejs:sdkV3ExcludeSmithyPackages": true,
+    "@aws-cdk/aws-stepfunctions-tasks:fixRunEcsTaskPolicy": true,
+    "@aws-cdk/aws-ec2:bastionHostUseAmazonLinux2023ByDefault": true,
+
+
+    "environments": {
+      "projectName": "marti-ai",
+      "dev": {
+        "network": {
+          "maxAzs": 2,
+          "natGateways": 1
+        },
+        "application": {
+          "containerInsights": true,
+          "taskCpu": 256,
+          "taskMemory": 512,
+          "containerPort": 80,
+          "desiredCount": 2,
+          "minTasks": 1,
+          "maxTasks": 4,
+          "healthCheck": {
+            "path": "/health",
+            "interval": 30,
+            "timeout": 3,
+            "healthyCount": 2,
+            "unhealthyCount": 3
+          },
+          "scaling": {
+            "cpuTargetUtilization": 70,
+            "requestsPerTarget": 1000,
+            "scaleInCooldown": 60,
+            "scaleOutCooldown": 60
+          },
+          "database": {
+            "redis": {
+              "nodeType": "cache.t3.micro",
+              "numNodes": 1,
+              "port": 6379
+            },
+            "rds": {
+              "instanceType": "t3.small",
+              "allocatedStorage": 20,
+              "maxAllocatedStorage": 100,
+              "multiAz": false,
+              "backupRetentionDays": 7,
+              "databaseName": "${projectName}-db",
+              "port": 5432,
+              "deletionProtection": false
+            },
+            "pinecone": {
+              "apiKey": "Pinecone api key",
+              "indexName": "Index name"
+            }
+          }
+        },
+        "ecr": {
+          "repositoryName": "${projectName}-dev",
+          "maxImageCount": 5,
+          "enableScan": true
+        },
+        "alarms": {
+          "costs": {
+            "monthlyBudget": 500,
+            "budgetThresholds": [80],
+            "natGatewayDataTransfer": 50,
+            "natGatewayConnections": 5000
+          },
+          "rds": {
+            "cpuThreshold": 80,
+            "storageThreshold": 80,
+            "connectionThreshold": 80
+          },
+          "redis": {
+            "memoryThreshold": 80,
+            "cpuThreshold": 80
+          },
+          "ecs": {
+            "cpuThreshold": 80,
+            "memoryThreshold": 80,
+            "minTasks": 1
+          }
+        },
+        "cleanup": {
+          "rds": {
+            "backupRetentionDays": 7,
+            "deleteAutomatedBackups": true
+          },
+          "redis": {
+            "snapshotRetentionDays": 3,
+            "maintenanceWindow": "sun:05:00-sun:06:00"
+          },
+          "ecr": {
+            "maxTaggedImages": 5,
+            "untaggedRetentionDays": 1,
+            "tagPrefixes": ["dev-", "test-"]
+          }
+        }
+      },
+      "prod": {
+        "network": {
+          "maxAzs": 3,
+          "natGateways": 3
+        },
+        "application": {
+          "containerInsights": true,
+          "taskCpu": 1024,
+          "taskMemory": 2048,
+          "containerPort": 80,
+          "desiredCount": 3,
+          "minTasks": 2,
+          "maxTasks": 10,
+          "healthCheck": {
+            "path": "/health",
+            "interval": 30,
+            "timeout": 3,
+            "healthyCount": 2,
+            "unhealthyCount": 3
+          },
+          "scaling": {
+            "cpuTargetUtilization": 70,
+            "requestsPerTarget": 1000,
+            "scaleInCooldown": 300,
+            "scaleOutCooldown": 300
+          },
+          "database": {
+            "redis": {
+              "nodeType": "cache.t3.medium",
+              "numNodes": 2,
+              "port": 6379
+            },
+            "rds": {
+              "instanceType": "t3.medium",
+              "allocatedStorage": 50,
+              "maxAllocatedStorage": 200,
+              "multiAz": true,
+              "backupRetentionDays": 30,
+              "databaseName": "${projectName}-db",
+              "port": 5432,
+              "deletionProtection": true
+            }
+          }
+        },
+        "ecr": {
+          "repositoryName": "${projectName}-prod",
+          "maxImageCount": 10,
+          "enableScan": true
+        },
+        "alarms": {
+          "costs": {
+            "monthlyBudget": 2000,
+            "budgetThresholds": [70, 80, 90],
+            "natGatewayDataTransfer": 150,
+            "natGatewayConnections": 10000
+          },
+          "rds": {
+            "cpuThreshold": 75,
+            "storageThreshold": 75,
+            "connectionThreshold": 80,
+            "deadlockThreshold": 0
+          },
+          "redis": {
+            "memoryThreshold": 75,
+            "cpuThreshold": 75,
+            "criticalMemoryThreshold": 90,
+            "evictionThreshold": 1000
+          },
+          "ecs": {
+            "cpuThreshold": 75,
+            "memoryThreshold": 75,
+            "minTasks": 2,
+            "unhealthyTaskThreshold": 1,
+            "error5xxThreshold": 10
+          },
+          "network": {
+            "natErrorThreshold": 5,
+            "natGatewayDataTransfer": 150,
+            "natGatewayConnections": 10000
+          }
+        },
+        "cleanup": {
+          "rds": {
+            "backupRetentionDays": 30,
+            "deleteAutomatedBackups": false
+          },
+          "redis": {
+            "snapshotRetentionDays": 7,
+            "maintenanceWindow": "sun:04:00-sun:05:00"
+          },
+          "ecr": {
+            "maxTaggedImages": 10,
+            "untaggedRetentionDays": 1,
+            "tagPrefixes": ["prod-"]
+          }
+        }
+      }
+    }
+  }
+}
